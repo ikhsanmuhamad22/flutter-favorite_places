@@ -1,14 +1,17 @@
+import 'package:favorite_places_app/providers/place_provider.dart';
+import 'package:favorite_places_app/screens/detail_place.dart';
 import 'package:favorite_places_app/screens/new_places.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ListPlaces extends StatefulWidget {
+class ListPlaces extends ConsumerStatefulWidget {
   const ListPlaces({super.key});
 
   @override
-  State<ListPlaces> createState() => _ListPlacesState();
+  ConsumerState<ListPlaces> createState() => _ListPlacesState();
 }
 
-class _ListPlacesState extends State<ListPlaces> {
+class _ListPlacesState extends ConsumerState<ListPlaces> {
   void _addPlace() {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => NewPlaces(),
@@ -17,17 +20,43 @@ class _ListPlacesState extends State<ListPlaces> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Your Places'),
-        actions: [IconButton(onPressed: _addPlace, icon: Icon(Icons.add))],
-      ),
-      body: Center(
-        child: Text(
-          'No Places added yet',
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
+    final place = ref.watch(placeProvider);
+
+    Widget content = Center(
+      child: Text(
+        'No Places added yet',
+        style: Theme.of(context).textTheme.titleMedium,
       ),
     );
+
+    if (place.isNotEmpty) {
+      content = ListView.builder(
+        itemCount: place.length,
+        itemBuilder: (context, index) {
+          return Container(
+            alignment: Alignment.topLeft,
+            padding: EdgeInsets.symmetric(vertical: 0, horizontal: 8),
+            child: TextButton(
+                onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => DetailPlace(place: place[index]),
+                    )),
+                child: Text(
+                  place[index].title,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyLarge!
+                      .copyWith(color: Colors.white, fontSize: 18),
+                )),
+          );
+        },
+      );
+    }
+
+    return Scaffold(
+        appBar: AppBar(
+          title: Text('Your Places'),
+          actions: [IconButton(onPressed: _addPlace, icon: Icon(Icons.add))],
+        ),
+        body: content);
   }
 }
