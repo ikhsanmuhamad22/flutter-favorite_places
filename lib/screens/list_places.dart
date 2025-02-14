@@ -33,20 +33,19 @@ class _ListPlacesState extends ConsumerState<ListPlaces> {
       content = ListView.builder(
         itemCount: place.length,
         itemBuilder: (context, index) {
-          return Container(
-            alignment: Alignment.topLeft,
-            padding: EdgeInsets.symmetric(vertical: 0, horizontal: 8),
-            child: TextButton(
-                onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => DetailPlace(place: place[index]),
-                    )),
-                child: Text(
-                  place[index].title,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .copyWith(color: Colors.white, fontSize: 18),
-                )),
+          return ListTile(
+            title: Text(
+              place[index].title,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyLarge!
+                  .copyWith(color: Colors.white, fontSize: 18),
+            ),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => DetailPlace(place: place[index]),
+              ),
+            ),
           );
         },
       );

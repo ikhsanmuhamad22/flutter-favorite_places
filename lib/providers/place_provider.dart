@@ -5,7 +5,7 @@ class PlaceProvider extends StateNotifier<List<Place>> {
   PlaceProvider() : super([]);
 
   void addPlace(Place place) {
-    state = [...state, place];
+    state = [place, ...state];
   }
 }
 

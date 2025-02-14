@@ -11,7 +11,15 @@ class DetailPlace extends StatelessWidget {
       appBar: AppBar(
         title: Text(place.title),
       ),
-      body: Center(child: Text(place.title),),
+      body: Center(
+        child: Text(
+          place.title,
+          style: Theme.of(context)
+              .textTheme
+              .bodyLarge!
+              .copyWith(color: Colors.white),
+        ),
+      ),
     );
   }
 }
