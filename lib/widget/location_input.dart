@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:favorite_places_app/models/place.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
@@ -14,8 +15,12 @@ class LocationInput extends StatefulWidget {
 }
 
 class _LocationInputState extends State<LocationInput> {
-  Location? _pickedLocation;
+  PlaceLocation? _pickedLocation;
   bool _isGetLocation = false;
+
+  String get locationImage {
+    return 'https://maps.googleapis.com/maps/api/staticmap?center=Berkeley,CA&zoom=13&size=400x400&key=AIzaSyA3kg7YWugGl1lTXmAmaBGPNhDW9pEh5bo&signature=45D4gqkHrzXqD1o0ucV_geljI6A=';
+  }
 
   void _getCurrenLocation() async {
     Location location = Location();
@@ -46,15 +51,21 @@ class _LocationInputState extends State<LocationInput> {
 
     locationData = await location.getLocation();
 
-    final lat = locationData.latitude;
-    final long = locationData.longitude;
-    final url = Uri.parse(
-        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$long&key=YOUR_API_KEY');
-    final response = await http.get(url);
-    final resData = json.decode(response.body);
-    final address = resData['result'][0]['formatted_address'];
+    // this is how you to use location via goggle but i not have any accont google map
+    // final lat = locationData.latitude;
+    // final long = locationData.longitude;
+    // final url = Uri.parse(
+    //     'https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$long&key=YOUR_API_KEY');
+    // final response = await http.get(url);
+    // final resData = json.decode(response.body);
+    // final address = resData['result'][0]['formatted_address'];
+
+    final lat = 40.714232;
+    final long = -73.9612889;
+    final address = '277 Bedford Avenue, Brooklyn, NY 11211, USA';
 
     setState(() {
+      _pickedLocation = PlaceLocation(lat: lat, long: long, address: address);
       _isGetLocation = false;
     });
   }
@@ -72,6 +83,14 @@ class _LocationInputState extends State<LocationInput> {
 
     if (_isGetLocation) {
       previewLocation = CircularProgressIndicator();
+    }
+
+    if (_pickedLocation != null) {
+      previewLocation = Image.network(
+        locationImage,
+        width: double.infinity,
+        height: double.infinity,
+      );
     }
 
     return Column(
