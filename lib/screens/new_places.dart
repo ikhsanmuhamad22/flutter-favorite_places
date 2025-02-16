@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:favorite_places_app/models/place.dart';
 import 'package:favorite_places_app/providers/place_provider.dart';
 import 'package:favorite_places_app/widget/image_input.dart';
+import 'package:favorite_places_app/widget/location_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -61,10 +62,10 @@ class _NewPlacesState extends ConsumerState<NewPlaces> {
                 decoration: InputDecoration(label: Text('Title')),
                 controller: _inputTitle,
               ),
-              SizedBox(
-                height: 12
-              ),
+              SizedBox(height: 12),
               ImageInput(onpickImage: (image) => _selectedImage = image),
+              SizedBox(height: 12),
+              LocationInput(),
               SizedBox(height: 12),
               ElevatedButton.icon(
                 onPressed: _savePlaces,
