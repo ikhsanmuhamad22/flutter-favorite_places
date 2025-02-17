@@ -38,9 +38,9 @@ class _NewPlacesState extends ConsumerState<NewPlaces> {
       return;
     }
 
-    Place newPlace = Place(
-        title: enteredText, image: _selectedImage!, location: _selectedPlace!);
-    ref.read(placeProvider.notifier).addPlace(newPlace);
+    ref
+        .read(placeProvider.notifier)
+        .addPlace(enteredText, _selectedImage!, _selectedPlace!);
     Navigator.of(context).pop();
   }
 
