@@ -1,12 +1,13 @@
-import 'dart:convert';
+// ignore_for_file: unused_local_variable
 
 import 'package:favorite_places_app/models/place.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
-import 'package:http/http.dart' as http;
+// import 'package:http/http.dart' as http;
 
 class LocationInput extends StatefulWidget {
-  const LocationInput({super.key});
+  const LocationInput({super.key, required this.onSelectedLocation});
+  final void Function(PlaceLocation location) onSelectedLocation;
 
   @override
   State<StatefulWidget> createState() {
@@ -68,6 +69,18 @@ class _LocationInputState extends State<LocationInput> {
       _pickedLocation = PlaceLocation(lat: lat, long: long, address: address);
       _isGetLocation = false;
     });
+
+    widget.onSelectedLocation(_pickedLocation!);
+  }
+
+  void _pickLocation() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Sorry this feature under developmet'),
+        duration: Duration(seconds: 2),
+      ),
+    );
+    return;
   }
 
   @override
@@ -115,7 +128,7 @@ class _LocationInputState extends State<LocationInput> {
               icon: Icon(Icons.location_city_sharp),
             ),
             TextButton.icon(
-              onPressed: () {},
+              onPressed: _pickLocation,
               label: Text('Pict location manualy'),
               icon: Icon(Icons.map),
             ),

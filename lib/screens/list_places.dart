@@ -47,6 +47,13 @@ class _ListPlacesState extends ConsumerState<ListPlaces> {
                     .bodyLarge!
                     .copyWith(color: Colors.white, fontSize: 18),
               ),
+              subtitle: Text(
+                place[index].location.address,
+                style: Theme.of(context)
+                    .textTheme
+                    .titleSmall!
+                    .copyWith(color: Theme.of(context).colorScheme.primary),
+              ),
               onTap: () => Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => DetailPlace(place: place[index]),

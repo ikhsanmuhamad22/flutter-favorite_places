@@ -17,6 +17,7 @@ class NewPlaces extends ConsumerStatefulWidget {
 class _NewPlacesState extends ConsumerState<NewPlaces> {
   final _inputTitle = TextEditingController();
   File? _selectedImage;
+  PlaceLocation? _selectedPlace;
 
   @override
   void dispose() {
@@ -37,7 +38,8 @@ class _NewPlacesState extends ConsumerState<NewPlaces> {
       return;
     }
 
-    Place newPlace = Place(title: enteredText, image: _selectedImage!);
+    Place newPlace = Place(
+        title: enteredText, image: _selectedImage!, location: _selectedPlace!);
     ref.read(placeProvider.notifier).addPlace(newPlace);
     Navigator.of(context).pop();
   }
@@ -48,31 +50,35 @@ class _NewPlacesState extends ConsumerState<NewPlaces> {
       appBar: AppBar(
         title: Text('Add new Place'),
       ),
-      body: Form(
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            children: [
-              TextFormField(
-                maxLength: 30,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyLarge!
-                    .copyWith(color: Colors.white),
-                decoration: InputDecoration(label: Text('Title')),
-                controller: _inputTitle,
-              ),
-              SizedBox(height: 12),
-              ImageInput(onpickImage: (image) => _selectedImage = image),
-              SizedBox(height: 12),
-              LocationInput(),
-              SizedBox(height: 12),
-              ElevatedButton.icon(
-                onPressed: _savePlaces,
-                icon: Icon(Icons.add),
-                label: Text('Add Place'),
-              )
-            ],
+      body: SingleChildScrollView(
+        child: Form(
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              children: [
+                TextFormField(
+                  maxLength: 30,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyLarge!
+                      .copyWith(color: Colors.white),
+                  decoration: InputDecoration(label: Text('Title')),
+                  controller: _inputTitle,
+                ),
+                SizedBox(height: 12),
+                ImageInput(onpickImage: (image) => _selectedImage = image),
+                SizedBox(height: 12),
+                LocationInput(
+                  onSelectedLocation: (location) => _selectedPlace = location,
+                ),
+                SizedBox(height: 12),
+                ElevatedButton.icon(
+                  onPressed: _savePlaces,
+                  icon: Icon(Icons.add),
+                  label: Text('Add Place'),
+                )
+              ],
+            ),
           ),
         ),
       ),
