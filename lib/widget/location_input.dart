@@ -66,7 +66,7 @@ class _LocationInputState extends State<LocationInput> {
     final address = '277 Bedford Avenue, Brooklyn, NY 11211, USA';
 
     setState(() {
-      _pickedLocation = PlaceLocation(lat: lat, long: long, address: address);
+      _pickedLocation = PlaceLocation(lat: lat, lng: long, address: address);
       _isGetLocation = false;
     });
 

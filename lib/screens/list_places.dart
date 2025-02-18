@@ -1,6 +1,6 @@
 import 'package:favorite_places_app/providers/place_provider.dart';
-import 'package:favorite_places_app/screens/detail_place.dart';
 import 'package:favorite_places_app/screens/new_places.dart';
+import 'package:favorite_places_app/widget/place_item_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -12,6 +12,14 @@ class ListPlaces extends ConsumerStatefulWidget {
 }
 
 class _ListPlacesState extends ConsumerState<ListPlaces> {
+  late Future<void> _placesFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _placesFuture = ref.read(placeProvider.notifier).loadPlaces();
+  }
+
   void _addPlace() {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => NewPlaces(),
@@ -20,56 +28,20 @@ class _ListPlacesState extends ConsumerState<ListPlaces> {
 
   @override
   Widget build(BuildContext context) {
-    final place = ref.watch(placeProvider);
-
-    Widget content = Center(
-      child: Text(
-        'No Places added yet',
-        style: Theme.of(context).textTheme.titleMedium,
-      ),
-    );
-
-    if (place.isNotEmpty) {
-      content = ListView.builder(
-        itemCount: place.length,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ListTile(
-              leading: CircleAvatar(
-                radius: 26,
-                backgroundImage: FileImage(place[index].image),
-              ),
-              title: Text(
-                place[index].title,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyLarge!
-                    .copyWith(color: Colors.white, fontSize: 18),
-              ),
-              subtitle: Text(
-                place[index].location.address,
-                style: Theme.of(context)
-                    .textTheme
-                    .titleSmall!
-                    .copyWith(color: Theme.of(context).colorScheme.primary),
-              ),
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => DetailPlace(place: place[index]),
-                ),
-              ),
-            ),
-          );
-        },
-      );
-    }
+    final places = ref.watch(placeProvider);
 
     return Scaffold(
         appBar: AppBar(
           title: Text('Your Places'),
           actions: [IconButton(onPressed: _addPlace, icon: Icon(Icons.add))],
         ),
-        body: content);
+      body: FutureBuilder(
+        future: _placesFuture,
+        builder: (context, snapshot) =>
+            snapshot.connectionState == ConnectionState.waiting
+                ? Center(child: CircularProgressIndicator())
+                : PlaceItemList(places: places),
+      ),
+    );
   }
 }
